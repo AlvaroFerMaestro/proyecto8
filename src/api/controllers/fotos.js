@@ -48,8 +48,12 @@ const postFoto = async (req, res, next) => {
 
         if (req.file) {
             newFoto.imagen = req.file.path;
-        }
 
+            // Para subir una foto a una carpeta especifica
+           /*  const newFotoCarperta = await cloudinary.uploader.upload(req.file.path, {
+            folder: "fotos" */
+        }
+        
         if (req.user.rol === "admin"){
             newFoto.verified = true;
         } else {
@@ -69,12 +73,21 @@ const putFoto = async (req, res, next) => {
         const { id } = req.params;
         const newFoto = new Foto(req.body);
         newFoto._id = id;
+        /* const ActFotoCarpeta = await cloudinary.uploader.upload(req.file.path, {
+                folder: "fotos" */
 
         if(req.file){
             newFoto.imagen = req.file.path;
 
             const oldFoto = await Foto.findById(id);
             deleteFile(oldFoto.imagen)
+
+            /* const oldFotoCarpeta = await Foto.findById(id);
+            if (oldFoto && oldFoto.imagen) {
+                const id = oldFoto.imagen.split("/").pop().split(".")[0];
+                await cloudinary.uploader.destroy(`fotos/${id}`);
+ */
+
         }
 
         const fotoUpdate = await Foto.findByIdAndUpdate(id, newFoto, {
